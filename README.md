@@ -6,5 +6,5 @@
 3. Go to results page
 <img src="https://raw.githubusercontent.com/LuckyMan612/SpeedTestsAnalyzer/main/.github/Screenshot_20240725_170438_Speedtest.jpg">
 4. Click share button
-<img src="https://raw.githubusercontent.com/LuckyMan612/SpeedTestsAnalyzer/main/.github/Screenshot_20240725_170513_Speedtest.jpg>
+<img src="https://raw.githubusercontent.com/LuckyMan612/SpeedTestsAnalyzer/main/.github/Screenshot_20240725_170513_Speedtest.jpg">
 5. Upload it to website
