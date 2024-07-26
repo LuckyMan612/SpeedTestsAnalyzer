@@ -1,5 +1,6 @@
 let map;
 let markers = [];
+let allTests = [];
 
 function initMap() {
     map = L.map('map').setView([54.5260, 15.2551], 4); // Center map on Europe
@@ -35,7 +36,7 @@ function analyzeData(data) {
     let testsByNetwork = {};
     let fastestTest = null;
     let slowestTest = null;
-    let allTests = [];
+    allTests = [];
 
     data.forEach(row => {
         const dateTime = row[0]; // Combined date and time
@@ -88,6 +89,9 @@ function analyzeData(data) {
         <p>Slowest Test: ${slowestTest.downloadSpeed.toFixed(2)} Mbps (Network: ${slowestTest.networkType}, Date: ${slowestTest.dateTime})</p>
     `;
 
+    const switchesDiv = document.getElementById('switches');
+    switchesDiv.innerHTML = '';
+
     for (const network in testCounts) {
         const avgDownload = speedSum[network].download / testCounts[network];
         const avgUpload = speedSum[network].upload / testCounts[network];
@@ -103,12 +107,18 @@ function analyzeData(data) {
             <p>Fastest Test: ${fastestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${fastestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${fastestNetworkTest.dateTime})</p>
             <p>Slowest Test: ${slowestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${slowestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${slowestNetworkTest.dateTime})</p>
         `;
+
+        const switchElement = document.createElement('label');
+        switchElement.className = 'switch';
+        switchElement.innerHTML = `
+            <input type="checkbox" id="${network}" checked onchange="toggleNetwork('${network}')">
+            <span class="slider round"></span>
+            ${network}
+        `;
+        switchesDiv.appendChild(switchElement);
     }
 
     addMarkersToMap(allTests);
-    document.getElementById('showAllTests').onclick = function() {
-        addMarkersToMap(allTests);
-    };
 }
 
 function formatBytes(bytes) {
@@ -129,6 +139,19 @@ function addMarkersToMap(locations) {
             .bindPopup(`Date: ${location.dateTime}<br>Download Speed: ${location.downloadSpeed} Mbps<br>Upload Speed: ${location.uploadSpeed} Mbps<br>Network: ${location.networkType}`);
         markers.push(marker);
     });
+}
+
+function toggleNetwork(network) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let filteredTests = [];
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            filteredTests = filteredTests.concat(allTests.filter(test => test.networkType === checkbox.id));
+        }
+    });
+
+    addMarkersToMap(filteredTests);
 }
 
 document.addEventListener('DOMContentLoaded', initMap);
