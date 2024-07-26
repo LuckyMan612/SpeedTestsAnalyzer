@@ -47,6 +47,7 @@ function analyzeData(data) {
         const downloadBytes = parseFloat(row[5]) || 0;
         const uploadSpeed = parseFloat(row[6]) || 0;
         const uploadBytes = parseFloat(row[7]) || 0;
+        const url = row[12];
 
         // Ignore undefined networks
         if (!networkType) return;
@@ -64,7 +65,7 @@ function analyzeData(data) {
         speedSum[networkType].download += downloadSpeed;
         speedSum[networkType].upload += uploadSpeed;
 
-        const testInfo = { lat, lng, downloadSpeed, uploadSpeed, networkType, dateTime };
+        const testInfo = { lat, lng, downloadSpeed, uploadSpeed, networkType, dateTime, url };
         allTests.push(testInfo);
 
         if (lat && lng) {
@@ -85,8 +86,8 @@ function analyzeData(data) {
         <p>Total Downloaded Data: ${formatBytes(totalDownload)}</p>
         <p>Total Uploaded Data: ${formatBytes(totalUpload)}</p>
         <p>Total Tests: ${data.length}</p>
-        <p>Fastest Test: ${fastestTest.downloadSpeed.toFixed(2)} Mbps (Network: ${fastestTest.networkType}, Date: ${fastestTest.dateTime})</p>
-        <p>Slowest Test: ${slowestTest.downloadSpeed.toFixed(2)} Mbps (Network: ${slowestTest.networkType}, Date: ${slowestTest.dateTime})</p>
+        <p>Fastest Test: ${fastestTest.downloadSpeed.toFixed(2)} Mbps (Network: ${fastestTest.networkType}, Date: ${fastestTest.dateTime}) ${fastestTest.url ? `<button onclick="window.open('${fastestTest.url}', '_blank')">Click</button>` : ''}</p>
+        <p>Slowest Test: ${slowestTest.downloadSpeed.toFixed(2)} Mbps (Network: ${slowestTest.networkType}, Date: ${slowestTest.dateTime}) ${slowestTest.url ? `<button onclick="window.open('${slowestTest.url}', '_blank')">Click</button>` : ''}</p>
     `;
 
     const switchesDiv = document.getElementById('switches');
@@ -104,21 +105,21 @@ function analyzeData(data) {
             <p>Total Tests: ${testCounts[network]}</p>
             <p>Average Download Speed: ${avgDownload.toFixed(2)} Mbps</p>
             <p>Average Upload Speed: ${avgUpload.toFixed(2)} Mbps</p>
-            <p>Fastest Test: ${fastestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${fastestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${fastestNetworkTest.dateTime})</p>
-            <p>Slowest Test: ${slowestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${slowestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${slowestNetworkTest.dateTime})</p>
+            <p>Fastest Test: ${fastestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${fastestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${fastestNetworkTest.dateTime}) ${fastestNetworkTest.url ? `<button onclick="window.open('${fastestNetworkTest.url}', '_blank')">Click</button>` : ''}</p>
+            <p>Slowest Test: ${slowestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${slowestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${slowestNetworkTest.dateTime}) ${slowestNetworkTest.url ? `<button onclick="window.open('${slowestNetworkTest.url}', '_blank')">Click</button>` : ''}</p>
         `;
 
         const switchElement = document.createElement('label');
         switchElement.className = 'switch';
         switchElement.innerHTML = `
-            <input type="checkbox" id="${network}" checked onchange="toggleNetwork('${network}')">
+            <input type="checkbox" id="${network}" onchange="toggleNetwork('${network}')">
             <span class="slider round"></span>
             ${network}
         `;
         switchesDiv.appendChild(switchElement);
     }
 
-    addMarkersToMap(allTests);
+    toggleNetwork(); // Initialize with no networks shown
 }
 
 function formatBytes(bytes) {
@@ -136,7 +137,7 @@ function addMarkersToMap(locations) {
 
     locations.forEach(location => {
         const marker = L.marker([location.lat, location.lng]).addTo(map)
-            .bindPopup(`Date: ${location.dateTime}<br>Download Speed: ${location.downloadSpeed} Mbps<br>Upload Speed: ${location.uploadSpeed} Mbps<br>Network: ${location.networkType}`);
+            .bindPopup(`Date: ${location.dateTime}<br>Download Speed: ${location.downloadSpeed} Mbps<br>Upload Speed: ${location.uploadSpeed} Mbps<br>Network: ${location.networkType}<br>${location.url ? `<button onclick="window.open('${location.url}', '_blank')">Click</button>` : ''}`);
         markers.push(marker);
     });
 }
