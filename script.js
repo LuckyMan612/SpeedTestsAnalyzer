@@ -103,10 +103,9 @@ function analyzeData(data) {
             <p>Fastest Test: ${fastestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${fastestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${fastestNetworkTest.dateTime})</p>
             <p>Slowest Test: ${slowestNetworkTest.downloadSpeed.toFixed(2)} Mbps (Upload Speed: ${slowestNetworkTest.uploadSpeed.toFixed(2)} Mbps, Date: ${slowestNetworkTest.dateTime})</p>
         `;
-
-        addMarkersToMap(testsByNetwork[network]);
     }
 
+    addMarkersToMap(allTests);
     document.getElementById('showAllTests').onclick = function() {
         addMarkersToMap(allTests);
     };
