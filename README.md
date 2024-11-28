@@ -10,3 +10,6 @@
 - Upload it to website
 - Get results
 <img src="https://raw.githubusercontent.com/LuckyMan612/SpeedTestsAnalyzer/main/.github/Zrzut%20ekranu%202024-07-26%20105754.png" width="1000"> <img src="https://raw.githubusercontent.com/LuckyMan612/SpeedTestsAnalyzer/main/.github/Zrzut%20ekranu%202024-07-26%20110027.png" width="1000">
+
+## funny trivia about this project
+I did this project on the train, on my phone in a couple of hours, went home and got bored and did it continuously for a while.
